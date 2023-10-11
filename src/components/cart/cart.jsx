@@ -77,7 +77,7 @@ export const Cart = () => {
           <p className={styles.cart_product_delivery}>배송비</p>
           <p className={styles.cart_product_delivery_price}>0원</p>
         </div>
-
+        
         <div className={styles.payment}>
           <p className={styles.cart_prouct_payment}>결제 예정 금액</p>
           <p className={styles.cart_prouct_payment_price}>0</p>
