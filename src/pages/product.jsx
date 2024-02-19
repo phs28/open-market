@@ -1,7 +1,7 @@
 import { Detail } from "../components/product_detail/detail";
 
-const Product = () => {
-  return <Detail />;
+const Product = ({converPrice}) => {
+  return <Detail converPrice={converPrice}/>;
 };
 
 export default Product;
