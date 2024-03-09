@@ -8,17 +8,20 @@ import { useState } from "react";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
+  const [checkLists, setCheckLists] = useState([]);
+
   const converPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   
   return (
     <BrowserRouter>
-      <TopNavigationBar />
+      <TopNavigationBar cart={cart} />
       <Routes>
         <Route path="/" element={<Home products={products} setProducts={setProducts} converPrice={converPrice}/>} />
-        <Route path="/product/:id" converPrice={converPrice} element={<Product />} />
-        <Route path="/cart" element={<Basket />} />
+        <Route path="/product/:id" element={<Product converPrice={converPrice} cart={cart} setCart={setCart}/>} />
+        <Route path="/cart" element={<Basket converPrice={converPrice} cart={cart} setCart={setCart} checkLists={checkLists} setCheckLists={setCheckLists}/>} />
       </Routes>
     </BrowserRouter>
   );

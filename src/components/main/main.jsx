@@ -7,12 +7,11 @@ import axios from "axios";
 export const Main = ({products, setProducts, converPrice}) => {
 
   useEffect(() => {
-    axios.get("/data/products.json").then(data => {
+    axios.get("/data/products.json").then((data) => {
       setProducts(data.data.products)
     })
   }, [setProducts]);
-
-
+  
   return (
     <>
       <EventBanner />

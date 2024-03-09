@@ -4,7 +4,7 @@ import styles from "./detail.module.css";
 import { useEffect, useState } from 'react';
 import axios from "axios";
 
-export const Detail = ({converPrice}) => {
+export const Detail = ({converPrice, cart, setCart}) => {
   const {id} = useParams();
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(1);
@@ -15,19 +15,57 @@ export const Detail = ({converPrice}) => {
     })
   }, [id]);
 
+  // 장바구니 물건 중복된 물건
+  const setQuantity = (id, quantity) => {
+    const found = cart.filter((el) => el.id === id)[0];
+    const idx = cart.indexOf(found);
+    const cartItem = {
+      id: product.id,
+      image: product.image,
+      name: product.name,
+      price: product.price,
+      provider: product.provider,
+      quantity: quantity,
+    };
+
+    setCart([...cart.slice(0, idx), cartItem, ...cart.slice(idx + 1)])
+  }
+
+  // 장바구니에 등록
+  const handleCart = () => {
+    const cartItem = {
+      id: product.id,
+      image: product.image,
+      name: product.name,
+      price: product.price,
+      provider: product.provider,
+      quantity: count
+    }
+    const found = cart.find((el) => el.id === cartItem.id);
+
+    if(found) {
+      setQuantity(cartItem.id, found.quantity + count);
+    } else {
+      setCart([...cart, cartItem]);
+    }
+  }
+
   const handleQuantity = (type) => {
     if(type === 'plus') {
       setCount(count+1);
     } else {
-      if(count === 0) {
-        return;
+      if(count === 1) {
+        return; 
+      } else {
+        setCount(count-1);
       }
-      setCount(count-1);      
     }
-  }
-  
-  console.log(product);
+  }  
+
+console.log(cart);
+
   return (
+    product && (
     <>
       <main className={styles.main}>
         <section className={styles.product}>
@@ -40,7 +78,7 @@ export const Detail = ({converPrice}) => {
             <p className={styles.seller_store}>{product.provider}</p>
             <p className={styles.product_name}>{product.name}</p>
             <span className={styles.price}>
-            {converPrice(product.price) + ""}
+            {converPrice(product.price + "")}
             <span className={styles.unit}>원</span>
             </span>
           </div>
@@ -83,7 +121,7 @@ export const Detail = ({converPrice}) => {
                 총 수량 <span className={styles.total_count}>{count}개</span>
               </span>
               <span className={styles.total_price}>
-              {converPrice(count * product.price)}
+              {converPrice(count * product.price + "")}
                 <span className={styles.total_unit}>원</span>
               </span>
             </div>
@@ -91,10 +129,13 @@ export const Detail = ({converPrice}) => {
 
           <div className={styles.btn}>
             <button className={styles.btn_buy}>바로 구매</button>
-            <button className={styles.btn_cart}>장바구니</button>
+            <button className={styles.btn_cart} onClick={() => handleCart()}>
+              장바구니
+            </button>
           </div>
         </section>
       </main>
     </>
+    )
   );
 };
